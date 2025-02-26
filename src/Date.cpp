@@ -55,8 +55,9 @@ std::string Date::toString() const {
               << (month < 10 ? "0" : "") << month << "-"
               << (day < 10 ? "0" : "") << day;
     return oss.str();
-};
+}
 
+// Get today's date in Date format
 Date Date::today() {
     std::time_t t = std::time(nullptr);  // Get current time
     std::tm* now = std::localtime(&t);   // Convert to local time structure

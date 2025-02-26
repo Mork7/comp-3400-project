@@ -1,32 +1,30 @@
 #include "Patient.hpp"
 #include <iostream>
-
 // Color codes for nice terminal display
 #define RESET   "\033[0m"
 #define YELLOW  "\033[33m"
 #define GREEN  "\033[32m"
 
-
 // Initialize static variable
 int Patient::nextID = 1000;  // Start patient IDs from 1000
 
-// Patient constructor
+// Patient Constructor
 Patient::Patient(std::string name, std::string phone, Date dob, std::string disease, std::string treatment)
     : patientID(nextID++), name(name), phoneNumber(phone), DOB(dob), disease(disease), treatment(treatment), admissionDate(Date::today()), dischargeDate(0, 0, 0) {}
 
-// Dischange patient 
-// TODO: A doctor discharges a patient, so when a doctor 
+// Discharge Patient 
 void Patient::discharge(Date discharge) {
     dischargeDate = discharge;
 }
 
-// Get the amount of days admitted for billing purposes when we come across it.
+// Get the amount of days admitted for billing purposes. Patients are billed at least 1 day minimum
 int Patient::getDaysAdmitted() const {
-    // If the patient has not been discharged, use today's date instead
+    Date today = Date::today();
+    
     if (dischargeDate.compareTo(Date(0, 0, 0)) == 0) {
-        return admissionDate.daysBetween(Date::today());
+        return std::max(1, admissionDate.daysBetween(today));
     }
-    return admissionDate.daysBetween(dischargeDate);
+    return std::max(1, admissionDate.daysBetween(dischargeDate));
 }
 
 // Display the patient information in a nice readable format.
@@ -49,6 +47,22 @@ void Patient::displayInfo() const {
     }
 
     std::cout << "\n-------------------------------\n"
-              << "Total Days Admitted: " << getDaysAdmitted() << " days\n"
+              << "Total Days Admitted: " << getDaysAdmitted() << " day(s)\n"
               << "===============================\n";
+}
+
+// GETTERS
+// Discharge Date
+Date Patient::getDischargeDate() const {
+    return this->dischargeDate;
+}
+
+// Admission Date
+Date Patient::getAdmissionDate() const {
+    return this->admissionDate;
+}
+
+// Patient ID
+int Patient::getPatientID() const {
+    return this->patientID;
 }

@@ -1,7 +1,6 @@
 #ifndef DATE_H
 #define DATE_H
-
-#include <iostream>
+#include <string>
 
 class Date {
 private:
@@ -13,10 +12,10 @@ private:
 
 public:
     Date(int year, int month, int day);
+    Date();
     int compareTo(const Date& other) const;
     int daysBetween(const Date& other) const;
     std::string toString() const; 
-
     static Date today();
 };
 

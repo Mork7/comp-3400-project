@@ -5,6 +5,9 @@
 // Constructor
 Date::Date(int year, int month, int day) : year(year), month(month), day(day) {}
 
+// Default constructor: Creates a "null" date
+Date::Date() : year(0), month(0), day(0) {}
+
 // Compare function: negative if earlier, positive if later, 0 if same
 int Date::compareTo(const Date& other) const {
     if (year != other.year) return year - other.year;

@@ -1,9 +1,10 @@
 #ifndef PATIENT_H
 #define PATIENT_H
 #include "Date.hpp"
+#include <string>
 
 class Patient {
-// Private Member
+// Private Members
 private:
     // use static because this will ensure the patientID is unique. All Patient classes will share this variable.
     static int nextID;
@@ -19,10 +20,12 @@ private:
 // Public Members
 public:
     Patient(std::string name, std::string phoneNumber, Date dob, std::string disease, std::string treatment);
-    void discharge(Date discharge);
-    int getDaysAdmitted() const;
+    Patient(const Patient& p);
+    Patient(Patient&& p);
+    void discharge();
     void displayInfo() const;
     Date getAdmissionDate() const;
+    int getDaysAdmitted() const;
     int getPatientID() const;
     Date getDischargeDate() const;
 };

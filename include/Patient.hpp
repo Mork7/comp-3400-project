@@ -3,6 +3,8 @@
 #include "Date.hpp"
 #include <string>
 
+class Doctor;
+
 class Patient {
 // Private Members
 private:
@@ -16,6 +18,7 @@ private:
     std::string treatment;
     Date admissionDate;
     Date dischargeDate;
+    Doctor* primaryDoctor;
 
 // Public Members
 public:
@@ -27,7 +30,10 @@ public:
     Date getAdmissionDate() const;
     int getDaysAdmitted() const;
     int getPatientID() const;
+    std::string getName() const;
     Date getDischargeDate() const;
+    Doctor* getPrimaryDoctor() const;
+    void setPrimaryDoctor(Doctor* primaryDoc);
 };
 
 #endif

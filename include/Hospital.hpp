@@ -1,20 +1,40 @@
+#ifndef HOSPITAL_H
+#define HOSPITAL_H
+
 #include <memory>
 #include <vector>
-#include "Employee.hpp"
-#include "Patient.hpp"
+#include <string>
+#include <Nurse.hpp>
+#include <Doctor.hpp>
+#include <Patient.hpp>
 
 class Hospital {
-private:
-    std::string name;
-    std::vector<std::unique_ptr<Employee>> nurses;
-    std::vector<std::unique_ptr<Employee>> doctors;
-    std::vector<std::unique_ptr<Patient>> patients;
+    private:
+        std::string name;
+        std::vector<std::unique_ptr<Nurse>> nurses;
+        std::vector<std::unique_ptr<Doctor>> doctors;
+        std::vector<std::unique_ptr<Patient>> patients;
+        int numAdmittedPatients;
+        void dischargePatientFromHospital(int patientID);
 
-public:
-    Hospital(std::string name);
-    void addDoctor(std::unique_ptr<Employee> doctor);
-    void addNurse(std::unique_ptr<Employee> nurse);
-    void addPatient(std::unique_ptr<Patient> patient);
-    std::string getName();
-    void printPatients();
+    public:
+        Hospital(std::string name);
+        void addDoctor(std::unique_ptr<Doctor> doctor);
+        void addNurse(std::unique_ptr<Nurse> nurse);
+        void admitPatient(std::unique_ptr<Patient> patient);
+        std::string getName();
+        void printPatients();
+        void printDoctors();
+        void printNurses();
+        void transferPatient(Hospital& newHospital, int patientID);
+        int getNumAdmittedPatients();
+        Doctor* getDoctorById(int doctorID);
+        Patient* getPatientById(int patientID);
+        Nurse* getNurseById(int nurseID);
+        std::vector<std::unique_ptr<Nurse>>& getNurses(); 
+        std::vector<std::unique_ptr<Doctor>>& getDoctors();
+        std::vector<std::unique_ptr<Patient>>& getPatients();
+
+    friend class Doctor; // this will allow Doctor to call the dischargeFromHospital() method in hospital.
 };
+#endif

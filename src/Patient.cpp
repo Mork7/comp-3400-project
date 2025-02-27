@@ -1,5 +1,7 @@
 #include "Patient.hpp"
+#include "Doctor.hpp"
 #include <iostream>
+
 // Color codes for nice terminal display
 #define RESET   "\033[0m"
 #define YELLOW  "\033[33m"
@@ -44,6 +46,7 @@ void Patient::displayInfo() const {
               << "DOB          : " << DOB.toString() << "\n"
               << "Disease      : " << disease << "\n"
               << "Treatment    : " << treatment << "\n"
+              << "Primary      : " << "Dr. " << getPrimaryDoctor()->getName() << "\n"
               << "Admitted on  : " << admissionDate.toString() << "\n"
               << "Discharged on: ";
 
@@ -71,4 +74,19 @@ Date Patient::getAdmissionDate() const {
 // Get Patient ID
 int Patient::getPatientID() const {
     return this->patientID;
+}
+
+// Get patient name
+string Patient::getName() const{
+    return name;
+}
+
+// Set primary doctor, in-case of transfers etc.
+void Patient::setPrimaryDoctor(Doctor* doctor){
+    primaryDoctor = doctor;
+}
+
+// Get primary dcotor
+Doctor* Patient::getPrimaryDoctor() const {
+    return primaryDoctor;
 }

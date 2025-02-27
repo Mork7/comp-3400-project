@@ -14,7 +14,7 @@ private:
     std::string name;
     std::string phoneNumber;
     Date DOB;
-    std::string disease;
+    std::string condition;
     std::string treatment;
     Date admissionDate;
     Date dischargeDate;
@@ -22,7 +22,7 @@ private:
 
 // Public Members
 public:
-    Patient(std::string name, std::string phoneNumber, Date dob, std::string disease, std::string treatment);
+    Patient(std::string name, std::string phoneNumber, Date dob, std::string condition, std::string treatment);
     Patient(const Patient& p);
     Patient(Patient&& p);
     void discharge();

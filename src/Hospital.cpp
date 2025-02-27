@@ -10,6 +10,7 @@
 #include <string>
 #include <algorithm>
 #include <iostream>
+#include <iomanip>  
 // ANSI color codes
 #define RESET   "\033[0m"
 #define BLUE    "\033[34m" 
@@ -18,7 +19,7 @@
 using namespace std;
 
 // Hospital constructor
-Hospital::Hospital(string name) : name(name), numAdmittedPatients(0) {}
+Hospital::Hospital(string name) : name(name), numAdmittedPatients(0), funds(504595.89) {}
 
 // Add doctor to hospital staff
 void Hospital::addDoctor(unique_ptr<Doctor> doctor) {
@@ -69,11 +70,75 @@ void Hospital::admitPatient(unique_ptr<Patient> patient) {
     }
 }
 
+// Pay a pharmacy for meds
+void Hospital::payPharmacy(double amount) {
+    if (funds >= amount) {
+        funds -= amount;
+        cout << name << " paid $" << amount << " to pharmacy. Remaining funds: $" << funds << "\n";
+    } else {
+        cerr << "Error: " << name << " does not have enough funds to pay the pharmacy.\n";
+    }
+}
+
 // Get hospital Name
 string Hospital::getName(){
     return name;
 }
 
+// Discharge a patient from the hospital, this will be called by a doctor.
+void Hospital::dischargePatientFromHospital(int patientID) {
+    auto iterator = find_if(patients.begin(), patients.end(),
+        [&](const unique_ptr<Patient>& patient) {
+            return patient->getPatientID() == patientID;
+        });
+
+    if (iterator != patients.end()) {
+        cout << "Discharging patient ID " << patientID << " (" << Hospital::getPatientById(patientID)->getName() << ") from " << name << "...\n";
+        // whichever Patient the iterator is pointing at, call the discharge function.
+        (*iterator)->discharge(); 
+        // patients.erase(iterator); This will delete from the vector, but for now I like having the record in the Hospital records with the discharge date.
+        numAdmittedPatients--;
+    } else {
+        cerr << "Error: Patient ID " << patientID << " not found in this hospital.\n";
+    }
+}
+
+// Transfer a patient from one hospital to another by ID
+void Hospital::transferPatient(Hospital& newHospital, int patientID) {
+    auto iterator = remove_if(patients.begin(), patients.end(),
+        [&](unique_ptr<Patient>& patient) {
+            if (patient->getPatientID() == patientID) {
+
+                // Store pointer before moving
+                Patient* patientPtr = patient.get();  
+
+                // Move ownership to the new hospital
+                newHospital.admitPatient(move(patient));
+
+                // Assign a new primary doctor from the new hospital
+                if (!newHospital.doctors.empty()) {
+                    patientPtr->setPrimaryDoctor(newHospital.doctors.front().get());  // assign first available doctor
+                } else {
+                    cout << "Warning: No doctors available at " << newHospital.getName() 
+                         << ". Primary doctor not set.\n";
+                    patientPtr->setPrimaryDoctor(nullptr); // Avoids accessing an empty vector
+                }
+                
+                return true; 
+            }
+            return false;
+        });
+
+    if (iterator == patients.end()) {
+        cerr << "Error: Patient ID " << patientID << " not found in this hospital.\n";
+    } else {
+        patients.erase(iterator, patients.end());  // Remove patient from old hospital
+        numAdmittedPatients--;
+        newHospital.numAdmittedPatients++;  // Update count in new hospital
+    }
+}
+
+// PRINTS
 // Print Patients
 void Hospital::printPatients() {
     cout << BLUE << "\n============================================================" << RESET << endl;
@@ -120,61 +185,9 @@ void Hospital::printNurses() {
     }
 }
 
-// Discharge a patient from the hospital, this will be called by a doctor.
-void Hospital::dischargePatientFromHospital(int patientID) {
-    auto iterator = find_if(patients.begin(), patients.end(),
-        [&](const unique_ptr<Patient>& patient) {
-            return patient->getPatientID() == patientID;
-        });
-
-    if (iterator != patients.end()) {
-        cout << "Discharging patient ID " << patientID << " (" << Hospital::getPatientById(patientID)->getName() << ") from " << name << "...\n";
-        // whichever Patient the iterator is pointing at, call the discharge function.
-        (*iterator)->discharge(); 
-        // patients.erase(it); This will delete from the vector, but for now I like having the record in the Hospital records with the discharge date.
-        numAdmittedPatients--;
-    } else {
-        cerr << "Error: Patient ID " << patientID << " not found in this hospital.\n";
-    }
-}
-
-// Transfer a patient from one hospital to another by ID
-void Hospital::transferPatient(Hospital& newHospital, int patientID) {
-    auto iterator = remove_if(patients.begin(), patients.end(),
-        [&](unique_ptr<Patient>& patient) {
-            if (patient->getPatientID() == patientID) {
-
-                // Store pointer before moving
-                Patient* patientPtr = patient.get();  
-
-                // Move ownership to the new hospital
-                newHospital.admitPatient(move(patient));
-
-                // Assign a new primary doctor from the new hospital
-                if (!newHospital.doctors.empty()) {
-                    patientPtr->setPrimaryDoctor(newHospital.doctors.front().get());  // assign first available doctor
-                } else {
-                    cout << "Warning: No doctors available at " << newHospital.getName() 
-                         << ". Primary doctor not set.\n";
-                    patientPtr->setPrimaryDoctor(nullptr); // Avoids accessing an empty vector
-                }
-                
-                return true; 
-            }
-            return false;
-        });
-
-    if (iterator == patients.end()) {
-        cerr << "Error: Patient ID " << patientID << " not found in this hospital.\n";
-    } else {
-        patients.erase(iterator, patients.end());  // Remove patient from old hospital
-        numAdmittedPatients--;
-        newHospital.numAdmittedPatients++;  // Update count in new hospital
-    }
-}
-
+// GETTERS
 // Getter for the number of admitted patients, just in case
-int Hospital::getNumAdmittedPatients(){
+int Hospital::getNumAdmittedPatients() const{
     return numAdmittedPatients;
 }
 
@@ -185,6 +198,7 @@ Doctor* Hospital::getDoctorById(int doctorID) {
             return doctor.get(); 
         }
     }
+    cerr << "Warning: Doctor with ID " << doctorID << " not found in " << name << ".\n";
     return nullptr;  
 }
 
@@ -195,7 +209,8 @@ Nurse* Hospital::getNurseById(int nurseID) {
             return nurse.get(); 
         }
     }
-    return nullptr;  
+    cerr << "Warning: Nurse with ID " << nurseID << " not found in " << name << ".\n";
+    return nullptr;   
 }
 
 // Get a single doctor by ID so we can use their methods
@@ -205,7 +220,13 @@ Patient* Hospital::getPatientById(int patientID) {
             return patient.get(); 
         }
     }
-    return nullptr;  
+    cerr << "Warning: Patient with ID " << patientID << " not found in " << name << ".\n";
+    return nullptr;   
+}
+
+// Get funds
+double Hospital::getFunds() const {
+    return funds;
 }
 
 // Getter for nurses

@@ -19,7 +19,7 @@ void Nurse::assignPatient(Patient* patient) {
         assignedPatients.push_back(patient);
         cout << "Nurse " << name << " is now taking care of Patient " << patient->getPatientID() << ".\n";
     } else {
-        cout << "Nurse " << name << " is at capacity (2 patients max).\n";
+        cout << "Nurse " << name << " is at capacity (2 patients max). Patient not transferred.\n";
     }
 }
 

@@ -13,13 +13,13 @@ using namespace std;
 int Patient::nextID = 1000;  // Start patient IDs from 1000
 
 // Patient Constructor, will increment nextID and set the patientID
-Patient::Patient(string name, string phone, Date dob, string disease, string treatment) : patientID(nextID++), name(name), phoneNumber(phone), DOB(dob), disease(disease), treatment(treatment), admissionDate(Date::today()), dischargeDate(0, 0, 0) {}
+Patient::Patient(string name, string phone, Date dob, string condition, string treatment) : patientID(nextID++), name(name), phoneNumber(phone), DOB(dob), condition(condition), treatment(treatment), admissionDate(Date::today()), dischargeDate(0, 0, 0) {}
 
 // Copy constructor, I don't know if we'll need one but hey
-Patient::Patient(const Patient& p) : patientID(p.patientID), name(p.name), phoneNumber(p.phoneNumber), DOB(p.DOB), disease(p.disease), treatment(p.treatment), admissionDate(p.admissionDate), dischargeDate(p.dischargeDate) {}
+Patient::Patient(const Patient& p) : patientID(p.patientID), name(p.name), phoneNumber(p.phoneNumber), DOB(p.DOB), condition(p.condition), treatment(p.treatment), admissionDate(p.admissionDate), dischargeDate(p.dischargeDate) {}
 
 // Move constructor, I believe we will need this to move patient to another hospital, depending on how they are related and stored in Hospital. If there is a vector or something in Hospital that stores the patients, we can just move the Patient to that vector without having to make another Patient instance.
-Patient::Patient(Patient&& p) : patientID(move(p.patientID)), name(move(p.name)), phoneNumber(move(p.phoneNumber)), DOB(move(p.DOB)), disease(move(p.disease)), treatment(move(p.treatment)), admissionDate(move(p.admissionDate)), dischargeDate(move(p.dischargeDate)) {} 
+Patient::Patient(Patient&& p) : patientID(move(p.patientID)), name(move(p.name)), phoneNumber(move(p.phoneNumber)), DOB(move(p.DOB)), condition(move(p.condition)), treatment(move(p.treatment)), admissionDate(move(p.admissionDate)), dischargeDate(move(p.dischargeDate)) {} 
 
 // Discharge Patient, set their discharge date to today.
 void Patient::discharge() {
@@ -39,16 +39,16 @@ int Patient::getDaysAdmitted() const {
 // Display the patient information in a nice readable format.
 void Patient::displayInfo() const {
     cout << "===============================\n"
-              << "      Patient Information\n"
-              << "===============================\n"
-              << "ID           : " << patientID << "\n"
-              << "Name         : " << name << "\n"
-              << "DOB          : " << DOB.toString() << "\n"
-              << "Disease      : " << disease << "\n"
-              << "Treatment    : " << treatment << "\n"
-              << "Primary      : " << "Dr. " << getPrimaryDoctor()->getName() << "\n"
-              << "Admitted on  : " << admissionDate.toString() << "\n"
-              << "Discharged on: ";
+            << "      Patient Information\n"
+            << "===============================\n"
+            << "ID           : " << patientID << "\n"
+            << "Name         : " << name << "\n"
+            << "DOB          : " << DOB.toString() << "\n"
+            << "Condition    : " << condition << "\n"
+            << "Treatment    : " << treatment << "\n"
+            << "Primary      : " << "Dr. " << getPrimaryDoctor()->getName() << "\n"
+            << "Admitted on  : " << admissionDate.toString() << "\n"
+            << "Discharged on: ";
 
     if (dischargeDate.compareTo(Date()) == 0) {
         cout << YELLOW << "Pending" << RESET;
@@ -57,8 +57,8 @@ void Patient::displayInfo() const {
     }
 
     cout << "\n-------------------------------\n"
-              << "Total Days Admitted: " << getDaysAdmitted() << " day(s)\n"
-              << "===============================\n";
+            << "Total Days Admitted: " << getDaysAdmitted() << " day(s)\n"
+            << "===============================\n";
 }
 
 // Get Discharge Date

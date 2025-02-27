@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include "Hospital.hpp"
+#include "Pharmacy.hpp"
 #include "Doctor.hpp"
 #include "Nurse.hpp"
 #include "Patient.hpp"
@@ -14,5 +15,5 @@ using namespace std;
 
 // Function to initialize hospitals, doctors, nurses, and patients
 unordered_map<string, unique_ptr<Hospital>> setupHospitals();
-
+unordered_map<string, unique_ptr<Pharmacy>> setupPharmacies();
 #endif

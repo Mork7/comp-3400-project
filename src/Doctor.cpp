@@ -34,32 +34,39 @@ void Doctor::removePatient(int patientID) {
     }
 }
 
-// Doctor decides when to discharge the patient, the Hospital dischargePatientFromHospital takes care of hospitals records, this one takes care of Docotr and Nurse records.
+// Doctor decides when to discharge the patient, dischargePatientFromHospital takes care of hospitals records, this one takes care of Docotr and Nurse records.
 void Doctor::dischargePatient(int patientID) {
+    // if the doctor isnt assigned to a hospital we have an issue
+    if (!hospital) {
+        cerr << "Error: Doctor " << name << " is not assigned to any hospital.\n";
+        return;
+    }
+
+    Doctor* registeredDoctor = hospital->getDoctorById(employeeID);
+    if (!registeredDoctor) {
+        cerr << "Error: Doctor " << name << " does not work at " << hospital->getName() << " and cannot discharge patients.\n";
+        return;
+    } 
+
     auto iterator = find_if(patients.begin(), patients.end(),
         [&](Patient* p) { return p->getPatientID() == patientID; });
 
-        // make sure doctor is assigned to a hospital
-        if (!hospital) {
-            cerr << "Error: Doctor " << name << " is not assigned to a hospital.\n";
-            return;
-        }
+    if (iterator != patients.end()) {
+        cout << "Doctor " << name << " is discharging Patient " << patientID << ".\n";
 
-        if (iterator != patients.end()) {
-            cout << "Doctor " << name << " is discharging Patient " << patientID << " ("<< hospital->getPatientById(patientID)->getName() << ").\n";
+        if (hospital->getPatientById(patientID)) {
+            hospital->dischargePatientFromHospital(patientID);
+            patients.erase(iterator);
 
-            if (hospital->getPatientById(patientID)) {
-                hospital->dischargePatientFromHospital(patientID);
-                patients.erase(iterator);
-
-            // we need to remove the patient from nurses vector too
+            // Remove the patient from all assigned nurses
             for (auto& nurse : hospital->getNurses()) {
                 nurse->removePatient(patientID);
-            };
-
+            }
         } else {
-            cerr << "Error: Doctor " << name << " is not treating Patient " << patientID << ".\n";
-        };
+            cerr << "Error: Patient " << patientID << " is not in " << hospital->getName() << ".\n";
+        }
+    } else {
+        cerr << "Error: Doctor " << name << " is not treating Patient " << patientID << ".\n";
     }
 }
 

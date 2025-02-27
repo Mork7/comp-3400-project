@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -Wall -std=c++17 -Iinclude
+CXXFLAGS = -Wall -std=c++17 -Iinclude -g  # Enable debugging
 
 # Source and object files
 SRC_DIR = src
@@ -14,7 +14,7 @@ TARGET = $(BUILD_DIR)/hospital_system
 # Default target
 all: $(TARGET)
 
-# Compile the executable
+# Compile the main program
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 

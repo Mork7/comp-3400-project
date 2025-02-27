@@ -15,6 +15,7 @@ class Hospital {
         std::vector<std::unique_ptr<Doctor>> doctors;
         std::vector<std::unique_ptr<Patient>> patients;
         int numAdmittedPatients;
+        double funds;
         void dischargePatientFromHospital(int patientID);
 
     public:
@@ -27,7 +28,9 @@ class Hospital {
         void printDoctors();
         void printNurses();
         void transferPatient(Hospital& newHospital, int patientID);
-        int getNumAdmittedPatients();
+        void payPharmacy(double amount);
+        int getNumAdmittedPatients() const;
+        double getFunds() const;
         Doctor* getDoctorById(int doctorID);
         Patient* getPatientById(int patientID);
         Nurse* getNurseById(int nurseID);

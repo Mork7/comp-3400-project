@@ -32,7 +32,7 @@ This project implements a Hospital Management System using C++. It manages patie
 
 ---
 
-## 🚀 How to Build and Run
+## How to Build and Run
 
 ### **Linux/macOS Instructions**
 
@@ -75,33 +75,33 @@ Ensure you have a C++ compiler installed:
 
 #### **2️⃣ Build Using CMake**
 Open **PowerShell** or **Command Prompt** and run:
-```powershell
+```sh
 mkdir build
 cd build
 cmake ..
 cmake --build . --config Debug
 ```
 - If using MinGW, add `-G "MinGW Makefiles"` to the `cmake ..` command:
-  ```powershell
+  ```sh
   cmake -G "MinGW Makefiles" ..
   cmake --build .
   ```
 
 #### **3️⃣ Run the Executable**
 After building, the executable will be inside the `build/` directory:
-```powershell
+```sh
 .\hospital_system.exe
 ```
 
 #### **4️⃣ Clean Compiled Files**
 To remove compiled files, delete the `build/` directory:
-```powershell
+```sh
 rm -r build
 ```
 
 ---
 
-## 📝 Git Best Practices
+## Git Best Practices
 Before committing, ensure you **do not** push compiled files. Use `.gitignore` to ignore unnecessary files:
 ```
 # Ignore compiled files
@@ -115,7 +115,7 @@ CMakeFiles/
 
 ---
 
-## 📌 Notes
+## Notes
 - Ensure all `.cpp` files are placed inside `src/` and `.hpp` files inside `include/`.
 - If you face **permission issues** when running `./hospital_system` on Linux/macOS, make sure it has execute permissions:
   ```sh

@@ -1,6 +1,8 @@
-# Ignore compiled files
 /build/
 *.o
 *.out
 *.exe
-.vscode
+CMakeCache.txt
+*.cmake
+CMakeFiles/
+.vscode/

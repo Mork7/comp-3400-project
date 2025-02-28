@@ -12,9 +12,9 @@
 #include <iostream>
 #include <iomanip>  
 // ANSI color codes
-#define RESET   "\033[0m"
-#define BLUE    "\033[34m" 
-#define RED     "\033[31m"
+#define RESET "\033[0m"
+#define BLUE "\033[34m" 
+#define RED "\033[31m"
 
 using namespace std;
 
@@ -76,7 +76,7 @@ void Hospital::payPharmacy(double amount) {
         funds -= amount;
         cout << name << " paid $" << amount << " to pharmacy. Remaining funds: $" << funds << "\n";
     } else {
-        cerr << "Error: " << name << " does not have enough funds to pay the pharmacy.\n";
+        cerr << "\033[31mError:\033[0m " << name << " does not have enough funds to pay the pharmacy.\n";
     }
 }
 
@@ -97,15 +97,19 @@ void Hospital::dischargePatientFromHospital(int patientID) {
         // whichever Patient the iterator is pointing at, call the discharge function.
         (*iterator)->discharge(); 
         // patients.erase(iterator); This will delete from the vector, but for now I like having the record in the Hospital records with the discharge date.
+        // setting a base rate of 150 per day
+        double amountOwed = Hospital::getPatientById(patientID)->getDaysAdmitted() * 150.00;
+        cout << "\033[33mPatient " << patientID << " (" << Hospital::getPatientById(patientID)->getName() << ")\033[0m owes: \033[32m$" << amountOwed << "\033[0m for treatment received." << endl;
         numAdmittedPatients--;
     } else {
-        cerr << "Error: Patient ID " << patientID << " not found in this hospital.\n";
+        cerr << "\033[31mError:\033[0m Patient ID " << patientID << " not found in this hospital.\n";
     }
 }
 
 // Transfer a patient from one hospital to another by ID
 void Hospital::transferPatient(Hospital& newHospital, int patientID) {
     auto iterator = remove_if(patients.begin(), patients.end(),
+    // [&] Captures all variables in the surrounding scope by reference. This means any variables used inside the lambda will directly refer to their original versions outside the lambda, rather than making copies. In contrast, [=] Captures everything by value (makes copies, cannot modify originals)
         [&](unique_ptr<Patient>& patient) {
             if (patient->getPatientID() == patientID) {
 
@@ -130,11 +134,10 @@ void Hospital::transferPatient(Hospital& newHospital, int patientID) {
         });
 
     if (iterator == patients.end()) {
-        cerr << "Error: Patient ID " << patientID << " not found in this hospital.\n";
+        cerr << "\033[31mError:\033[0m Patient ID " << patientID << " not found in this hospital.\n";
     } else {
         patients.erase(iterator, patients.end());  // Remove patient from old hospital
         numAdmittedPatients--;
-        newHospital.numAdmittedPatients++;  // Update count in new hospital
     }
 }
 

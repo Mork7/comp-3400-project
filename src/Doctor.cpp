@@ -38,13 +38,13 @@ void Doctor::removePatient(int patientID) {
 void Doctor::dischargePatient(int patientID) {
     // if the doctor isnt assigned to a hospital we have an issue
     if (!hospital) {
-        cerr << "Error: Doctor " << name << " is not assigned to any hospital.\n";
+        cerr << "\033[31mError:\033[0m Doctor " << name << " is not assigned to any hospital.\n";
         return;
     }
 
     Doctor* registeredDoctor = hospital->getDoctorById(employeeID);
     if (!registeredDoctor) {
-        cerr << "Error: Doctor " << name << " does not work at " << hospital->getName() << " and cannot discharge patients.\n";
+        cerr << "\033[31mError:\033[0m Doctor " << name << " does not work at " << hospital->getName() << " and cannot discharge patients.\n";
         return;
     } 
 
@@ -63,10 +63,10 @@ void Doctor::dischargePatient(int patientID) {
                 nurse->removePatient(patientID);
             }
         } else {
-            cerr << "Error: Patient " << patientID << " is not in " << hospital->getName() << ".\n";
+            cerr << "\033[31mError:\033[0m Patient " << patientID << " is not in " << hospital->getName() << ".\n";
         }
     } else {
-        cerr << "Error: Doctor " << name << " is not treating Patient " << patientID << ".\n";
+        cerr << "\033[31mError:\033[0m Doctor " << name << " is not treating Patient " << patientID << ".\n";
     }
 }
 

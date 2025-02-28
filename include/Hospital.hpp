@@ -17,8 +17,8 @@ class Hospital {
         int numAdmittedPatients;
         double funds;
         void dischargePatientFromHospital(int patientID);
-
-    public:
+        
+        public:
         Hospital(std::string name);
         void addDoctor(std::unique_ptr<Doctor> doctor);
         void addNurse(std::unique_ptr<Nurse> nurse);

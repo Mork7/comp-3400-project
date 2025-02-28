@@ -23,7 +23,7 @@ void Pharmacy::listMedications() const {
 // Fulfill request from a hospital for drugs
 double Pharmacy::requestMedication(Hospital& hospital, string medName, int quantity) {
     if (medicationPrices.find(medName) == medicationPrices.end()) {
-        cerr << "Error: Medication " << medName << " not available at " << name << ".\n";
+        cerr << "\033[31mError:\033[0m Medication " << medName << " not available at " << name << ".\n";
         return -1;
     }
 

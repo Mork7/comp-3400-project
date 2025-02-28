@@ -2,7 +2,4 @@
 *.o
 *.out
 *.exe
-CMakeCache.txt
-*.cmake
-CMakeFiles/
 .vscode/

@@ -111,7 +111,7 @@ unordered_map<string, unique_ptr<Hospital>> setupHospitals() {
             ));
         }
 
-        // **Admit 20 patients per hospital**
+        // **Admit 15 patients per hospital**
         for (int j = 0; j < 15; j++, patientIndex++) {
             if (patientIndex >= patientNames.size()) patientIndex = 0; // Loop around
             int conditionIndex = patientIndex % conditions.size();
@@ -126,7 +126,7 @@ unordered_map<string, unique_ptr<Hospital>> setupHospitals() {
         }
     }
 
-    cout << "Setup complete! Each hospital has 3 doctors, 5 nurses, and 10 patients.\n";
+    cout << "Setup complete! Each hospital has 10 doctors, 10 nurses, and 15 patients.\n";
     return hospitals;
 }
 

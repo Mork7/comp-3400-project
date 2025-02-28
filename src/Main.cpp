@@ -36,7 +36,7 @@ int main() {
     assert(cost2 == 75.00 && "Test failed: Incorrect total cost for Antibiotics!");
     assert(ryans->getFunds() == initialFundsRyans - cost2 && "Test failed: Ryan's funds did not decrease correctly!");
 
-    double cost3 = mediCorp->requestMedication(*ryans, "Pecocet", 5);
+    double cost3 = mediCorp->requestMedication(*ryans, "Percocet", 5);
     assert(cost3 == -1 && "Test failed: Invalid medication request should return -1!");
     assert(ryans->getFunds() == initialFundsRyans - cost2 && "Test failed: Ryan's funds should not change for invalid order!");
 

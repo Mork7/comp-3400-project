@@ -57,9 +57,13 @@ This will compile all source files and generate an executable inside the `build/
 ```
 
 #### **4️⃣ Clean Compiled Files**
-To remove compiled files and reset the build:
+To remove compiled files, delete the `build/` directory:
 ```sh
 rm -r build
+```
+or if still inside the `build/` directory:
+```sh
+rm -r *
 ```
 
 ---
@@ -88,7 +92,7 @@ cmake --build . --config Debug
   ```
 
 #### **3️⃣ Run the Executable**
-After building, the executable will be inside the `build/` directory:
+After building, the executable will be inside the `build/` directory: 
 ```sh
 .\hospital_system.exe
 ```

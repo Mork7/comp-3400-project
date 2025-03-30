@@ -1,7 +1,10 @@
 #include "Setup.hpp"
 #include <iostream>
-#include <iomanip> 
+#include <iomanip>
 #include <cassert>
+#include <map>
+#include <unordered_map> 
+#include <memory>
 
 /**
  *==================== Hospitals =====================
@@ -28,6 +31,10 @@
 */
 
 using namespace std;
+
+void displayMainMenu();
+void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals);
+void viewPatients(const unordered_map<int, shared_ptr<Patient>>& patients);
 
 int main() {
     cout << fixed << setprecision(2);
@@ -71,4 +78,68 @@ int main() {
     // =============== PASSED ==================
     cout << "\nAll assertions passed successfully.\n";
     return 0;
+
+    //========================= TERMINAL UI =========================
+    unordered_map<int, shared_ptr<Patient>> patients;  
+    int choice;
+    while (true) {
+        // Display the main menu
+        displayMainMenu();
+        cin >> choice;
+
+        // handle menu options
+        if (choice == 1) {
+            viewHospitals(hospitals);  
+        }
+        else if (choice == 2) {
+            viewPatients(patients);  
+        }
+        else if (choice == 3) {
+            break;  
+        }
+        else {
+            cout << "Invalid choice! Please try again." << endl;
+        }
+    }
+
+    cout << "Thank you for using the Hospital Management System." << endl;
+    return 0;
 }
+
+//Function to display the main menu
+void displayMainMenu() {
+    cout << "\nHospital Management System" << endl;
+    cout << "1. View Hospitals" << endl;
+    cout << "2. View Patients" << endl;
+    cout << "3. Exit" << endl;
+    cout << "Enter your choice: ";
+}
+
+//Function to view hospitals
+void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals) {
+    cout << "\n==================== Hospitals ====================" << endl;
+    for (const auto& hospital : hospitals) {
+        cout << "Hospital: " << hospital.first << endl;
+        hospital.second->printPatients();  
+        hospital.second->printDoctors();  
+        hospital.second->printNurses(); 
+        cout << "\n-------------------------------------------------" << endl;
+    }
+}
+
+//Function to view patients.
+void viewPatients(const unordered_map<int, shared_ptr<Patient>>& patients) {
+    cout << "\n==================== Patients ====================" << endl;
+    int patientID;
+    cout << "Enter Patient ID to view details: ";
+    cin >> patientID;
+
+    auto it = patients.find(patientID);
+    if (it != patients.end()) {
+        it->second->displayInfo();  //display patient details
+    }
+    else {
+        cout << "Patient not found!" << endl;
+    }
+}
+

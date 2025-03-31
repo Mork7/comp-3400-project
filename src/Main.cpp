@@ -5,6 +5,30 @@
 #include <map>
 #include <unordered_map> 
 #include <memory>
+#include <thread>
+#include <chrono>
+#include <limits>
+
+// ANSI color codes for prettier output
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define WHITE   "\033[37m"
+#define BOLD    "\033[1m"
+#define UNDERLINE "\033[4m"
+#define BG_BLACK "\033[40m"
+#define BG_RED   "\033[41m"
+#define BG_GREEN "\033[42m"
+#define BG_YELLOW "\033[43m"
+#define BG_BLUE   "\033[44m"
+#define BG_MAGENTA "\033[45m"
+#define BG_CYAN    "\033[46m"
+#define BG_WHITE   "\033[47m"
 
 /**
  *==================== Hospitals =====================
@@ -35,13 +59,41 @@ using namespace std;
 void displayMainMenu();
 void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals);
 void viewPatients(const unordered_map<string, unique_ptr<Hospital>>& hospitals);
-void transferPatient(unordered_map<string, unique_ptr<Hospital>>& hospitals);
+void relocatePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals);
 void dischargePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals);
 void requestMedication(unordered_map<string, unique_ptr<Hospital>>& hospitals, 
                       unordered_map<string, unique_ptr<Pharmacy>>& pharmacies);
+void addPatient(unordered_map<string, unique_ptr<Hospital>>& hospitals);
+void showLoadingAnimation(const string& message, int milliseconds = 1500);
 
 int main() {
     cout << fixed << setprecision(2);
+    
+    // Clear screen (works on most terminals)
+    system("clear");
+    
+    // Display welcome banner
+    cout << BOLD << CYAN;
+    cout << R"(
+ ╔═══════════════════════════════════════════════════╗
+ ║                                                   ║
+ ║   ╦ ╦┌─┐┌─┐┌─┐┬┌┬┐┌─┐┬                           ║
+ ║   ╠═╣│ │└─┐├─┘│ │ ├─┤│                           ║
+ ║   ╩ ╩└─┘└─┘┴  ┴ ┴ ┴ ┴┴─┘                         ║
+ ║   ╔╦╗┌─┐┌┐┌┌─┐┌─┐┌─┐┌┬┐┌─┐┌┐┌┌┬┐  ╔═╗┬ ┬┌─┐┌┬┐┌─┐┌┬┐║
+ ║   ║║║├─┤│││├─┤│ ┬├┤ │││├┤ │││ │   ╚═╗└┬┘└─┐ │ ├┤ │││║
+ ║   ╩ ╩┴ ┴┘└┘┴ ┴└─┘└─┘┴ ┴└─┘┘└┘ ┴   ╚═╝ ┴ └─┘ ┴ └─┘┴ ┴║
+ ║                                                   ║
+ ╚═══════════════════════════════════════════════════╝
+)" << RESET << endl;
+
+    cout << YELLOW << " Loading system components";
+    for (int i = 0; i < 3; i++) {
+        cout << ".";
+        cout.flush();
+        this_thread::sleep_for(chrono::milliseconds(300));
+    }
+    cout << GREEN << " Done!" << RESET << endl;
     
     bool runTests = false; // Set to true when you want to run tests
     
@@ -93,7 +145,18 @@ int main() {
     while (true) {
         // Display the main menu
         displayMainMenu();
-        cin >> choice;
+        
+        // Check if input is a number
+        if (!(cin >> choice)) {
+            // Input was not a number
+            cin.clear();  // Clear error state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Discard input
+            cout << RED << "❌ Please enter a number from 1-7!" << RESET << endl;
+            continue;  // Restart the loop
+        }
+        
+        // Discard any remaining characters in the input buffer
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         // handle menu options
         if (choice == 1) {
@@ -103,7 +166,7 @@ int main() {
             viewPatients(hospitals);  
         }
         else if (choice == 3) {
-            transferPatient(hospitals);
+            relocatePatient(hospitals);
         }
         else if (choice == 4) {
             dischargePatient(hospitals);
@@ -112,10 +175,13 @@ int main() {
             requestMedication(hospitals, pharmacies);
         }
         else if (choice == 6) {
+            addPatient(hospitals);
+        }
+        else if (choice == 7) {
             break;  
         }
         else {
-            cout << "Invalid choice! Please try again." << endl;
+            cout << RED << "❌ Invalid choice! Please enter a number from 1-7." << RESET << endl;
         }
     }
 
@@ -125,33 +191,43 @@ int main() {
 
 //Function to display the main menu
 void displayMainMenu() {
-    cout << "\nHospital Management System" << endl;
-    cout << "1. View Hospitals" << endl;
-    cout << "2. View Patients" << endl;
-    cout << "3. Transfer Patient" << endl;
-    cout << "4. Discharge Patient" << endl;
-    cout << "5. Request Medication" << endl;
-    cout << "6. Exit" << endl;
-    cout << "Enter your choice: ";
+    cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
+    cout << BOLD << CYAN << "║       🏥 Hospital Management System    ║" << RESET << endl;
+    cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
+    
+    cout << YELLOW << " 1. " << GREEN << "View Hospitals" << RESET << endl;
+    cout << YELLOW << " 2. " << GREEN << "View Patients" << RESET << endl;
+    cout << YELLOW << " 3. " << GREEN << "Relocate Patient" << RESET << endl;
+    cout << YELLOW << " 4. " << GREEN << "Discharge Patient" << RESET << endl;
+    cout << YELLOW << " 5. " << GREEN << "Request Medication" << RESET << endl;
+    cout << YELLOW << " 6. " << GREEN << "Add Patient" << RESET << endl;
+    cout << YELLOW << " 7. " << RED << "Exit" << RESET << endl;
+    cout << CYAN << "\n Enter your choice: " << RESET;
 }
 
 //Function to view hospitals
 void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals) {
-    cout << "\n==================== Hospitals ====================" << endl;
+    cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
+    cout << BOLD << CYAN << "║              🏥 HOSPITALS              ║" << RESET << endl;
+    cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
+
     for (const auto& hospital : hospitals) {
-        cout << "Hospital: " << hospital.first << endl;
+        cout << BOLD << YELLOW << "Hospital: " << WHITE << hospital.first << RESET << endl;
         hospital.second->printPatients();  
         hospital.second->printDoctors();  
         hospital.second->printNurses(); 
-        cout << "\n-------------------------------------------------" << endl;
+        cout << MAGENTA << "\n" << string(50, '-') << RESET << endl;
     }
 }
 
 //Function to view patients
 void viewPatients(const unordered_map<string, unique_ptr<Hospital>>& hospitals) {
-    cout << "\n==================== Patients ====================" << endl;
+    cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
+    cout << BOLD << CYAN << "║            👤 PATIENT LOOKUP           ║" << RESET << endl;
+    cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
+    
     int patientID;
-    cout << "Enter Patient ID to view details: ";
+    cout << YELLOW << "Enter Patient ID to view details: " << RESET;
     cin >> patientID;
 
     // Search for the patient in each hospital
@@ -159,73 +235,84 @@ void viewPatients(const unordered_map<string, unique_ptr<Hospital>>& hospitals) 
     for (const auto& [name, hospital] : hospitals) {
         Patient* patient = hospital->getPatientById(patientID);
         if (patient) {
+            cout << GREEN << "\n✓ Patient with ID " << WHITE << BOLD << patientID 
+                 << RESET << GREEN << " found in " << WHITE << BOLD << name << RESET << endl;
+            
+            // Create a visual box for patient info
+            cout << BLUE << string(50, '-') << RESET << endl;
             patient->displayInfo();
+            cout << BLUE << string(50, '-') << RESET << endl;
             found = true;
             break;
         }
     }
     
     if (!found) {
-        cout << "Patient not found in any hospital!" << endl;
+        cout << RED << "\n❌ Patient with ID " << patientID << " not found in any hospital!" << RESET << endl;
     }
 }
 
-// Function to transfer a patient between hospitals
-void transferPatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
-    cout << "\n==================== Transfer Patient ====================" << endl;
+// Function to relocate a patient between hospitals
+void relocatePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
+    cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
+    cout << BOLD << CYAN << "║          🚑 RELOCATE PATIENT           ║" << RESET << endl;
+    cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
     
     // Display all hospitals
-    cout << "Available Hospitals:" << endl;
+    cout << YELLOW << "Available Hospitals:" << RESET << endl;
     int i = 1;
     for (const auto& [name, _] : hospitals) {
-        cout << i++ << ". " << name << endl;
+        cout << CYAN << " " << i++ << ". " << WHITE << name << RESET << endl;
     }
     
     // Ask for source hospital
     string sourceHospital;
-    cout << "Enter source hospital name: ";
-    cin.ignore();
+    cout << YELLOW << "Enter source hospital name: " << RESET;
+    //cin.ignore();
     getline(cin, sourceHospital);
     
     if (hospitals.find(sourceHospital) == hospitals.end()) {
-        cout << "Hospital not found!" << endl;
+        cout << RED << "❌ Hospital not found!" << RESET << endl;
         return;
     }
     
     // Ask for patient ID
     int patientID;
-    cout << "Enter Patient ID to transfer: ";
+    cout << YELLOW << "Enter Patient ID to relocate: " << RESET;
     cin >> patientID;
     
     Patient* patient = hospitals[sourceHospital]->getPatientById(patientID);
     if (!patient) {
-        cout << "Patient not found in " << sourceHospital << "!" << endl;
+        cout << RED << "❌ Patient not found in " << WHITE << BOLD << sourceHospital << RESET << RED << "!" << RESET << endl;
         return;
     }
     
     // Ask for destination hospital
     string destHospital;
-    cout << "Enter destination hospital name: ";
+    cout << YELLOW << "Enter destination hospital name: " << RESET;
     cin.ignore();
     getline(cin, destHospital);
     
     if (hospitals.find(destHospital) == hospitals.end() || sourceHospital == destHospital) {
-        cout << "Invalid destination hospital!" << endl;
+        cout << RED << "❌ Invalid destination hospital!" << RESET << endl;
         return;
     }
     
-    // Transfer patient
+    // Relocate patient (using existing transferPatient method)
     hospitals[sourceHospital]->transferPatient(*hospitals[destHospital], patientID);
-    cout << "Patient " << patientID << " transferred from " << sourceHospital 
-         << " to " << destHospital << "." << endl;
+    cout << GREEN << "\n✓ Patient " << WHITE << BOLD << patientID << RESET << GREEN 
+         << " successfully relocated from " << WHITE << BOLD << sourceHospital 
+         << RESET << GREEN << " to " << WHITE << BOLD << destHospital << RESET << endl;
 }
 
 // Function to discharge a patient
 void dischargePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
-    cout << "\n==================== Discharge Patient ====================" << endl;
+    cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
+    cout << BOLD << CYAN << "║           🏥 DISCHARGE PATIENT          ║" << RESET << endl;
+    cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
     
     int patientID;
-    cout << "Enter Patient ID to discharge: ";
+    cout << YELLOW << "Enter Patient ID to discharge: " << RESET;
     cin >> patientID;
     
     // Find the patient in any hospital
@@ -238,75 +325,174 @@ void dischargePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
             Doctor* doctor = patient->getPrimaryDoctor();
             if (doctor) {
                 doctor->dischargePatient(patientID);
-                cout << "Patient " << patientID << " discharged by Dr. " << doctor->getName() << endl;
+                cout << GREEN << "\n✓ Patient " << WHITE << BOLD << patientID << RESET << GREEN 
+                     << " discharged by Dr. " << WHITE << BOLD << doctor->getName() << RESET << endl;
             } else {
-                cout << "Patient has no primary doctor assigned!" << endl;
+                cout << RED << "❌ Patient has no primary doctor assigned!" << RESET << endl;
             }
             break;
         }
     }
     
     if (!found) {
-        cout << "Patient not found in any hospital!" << endl;
+        cout << RED << "❌ Patient with ID " << patientID << " not found in any hospital!" << RESET << endl;
     }
 }
 
 // Function to request medication from a pharmacy
 void requestMedication(unordered_map<string, unique_ptr<Hospital>>& hospitals, 
                       unordered_map<string, unique_ptr<Pharmacy>>& pharmacies) {
-    cout << "\n==================== Request Medication ====================" << endl;
+    cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
+    cout << BOLD << CYAN << "║          💊 REQUEST MEDICATION          ║" << RESET << endl;
+    cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
     
     // Display all hospitals
-    cout << "Available Hospitals:" << endl;
+    cout << YELLOW << "Available Hospitals:" << RESET << endl;
     int i = 1;
     for (const auto& [name, _] : hospitals) {
-        cout << i++ << ". " << name << endl;
+        cout << CYAN << " " << i++ << ". " << WHITE << name << RESET << endl;
     }
     
     // Ask for hospital
     string hospitalName;
-    cout << "Enter hospital name: ";
-    cin.ignore();
+    cout << YELLOW << "Enter hospital name: " << RESET;
+    //cin.ignore();
     getline(cin, hospitalName);
     
     if (hospitals.find(hospitalName) == hospitals.end()) {
-        cout << "Hospital not found!" << endl;
+        cout << RED << "❌ Hospital not found!" << RESET << endl;
         return;
     }
     
     // Display all pharmacies
-    cout << "Available Pharmacies:" << endl;
+    cout << YELLOW << "Available Pharmacies:" << RESET << endl;
     i = 1;
     for (const auto& [name, _] : pharmacies) {
-        cout << i++ << ". " << name << endl;
+        cout << CYAN << " " << i++ << ". " << WHITE << name << RESET << endl;
     }
     
     // Ask for pharmacy
     string pharmacyName;
-    cout << "Enter pharmacy name: ";
+    cout << YELLOW << "Enter pharmacy name: " << RESET;
     getline(cin, pharmacyName);
     
     if (pharmacies.find(pharmacyName) == pharmacies.end()) {
-        cout << "Pharmacy not found!" << endl;
+        cout << RED << "❌ Pharmacy not found!" << RESET << endl;
         return;
     }
     
     // Ask for medication name
     string medicationName;
-    cout << "Enter medication name: ";
+    cout << YELLOW << "Enter medication name: " << RESET;
     getline(cin, medicationName);
     
     // Ask for quantity
     int quantity;
-    cout << "Enter quantity: ";
+    cout << YELLOW << "Enter quantity: " << RESET;
     cin >> quantity;
+    
+    showLoadingAnimation("Processing medication request ");
     
     // Request medication
     double cost = pharmacies[pharmacyName]->requestMedication(*hospitals[hospitalName], medicationName, quantity);
     if (cost > 0) {
-        cout << "Medication request successful. Total cost: $" << cost << endl;
+        cout << GREEN << "\n✓ Medication request successful. Total cost: " << WHITE << BOLD 
+             << "$" << cost << RESET << GREEN << " billed to " << WHITE << BOLD 
+             << hospitalName << RESET << endl;
     } else {
-        cout << "Medication request failed!" << endl;
+        cout << RED << "❌ Medication request failed!" << RESET << endl;
     }
+}
+
+// Function to add a new patient
+void addPatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
+    cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
+    cout << BOLD << CYAN << "║           👤 ADD NEW PATIENT           ║" << RESET << endl;
+    cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
+    
+    // Display all hospitals
+    cout << YELLOW << "Available Hospitals:" << RESET << endl;
+    int i = 1;
+    for (const auto& [name, _] : hospitals) {
+        cout << CYAN << " " << i++ << ". " << WHITE << name << RESET << endl;
+    }
+    
+    // Ask for hospital
+    string hospitalName;
+    cout << YELLOW << "Enter hospital name to admit patient: " << RESET;
+    getline(cin, hospitalName);
+    
+    if (hospitals.find(hospitalName) == hospitals.end()) {
+        cout << RED << "❌ Hospital not found!" << RESET << endl;
+        return;
+    }
+    
+    // Get patient information
+    string name, phoneNumber, condition, treatment;
+    int year, month, day;
+    
+    cout << YELLOW << "Enter patient name: " << RESET;
+    getline(cin, name);
+    
+    cout << YELLOW << "Enter patient phone number: " << RESET;
+    getline(cin, phoneNumber);
+    
+    cout << YELLOW << "Enter patient birth year (YYYY): " << RESET;
+    cin >> year;
+    cout << YELLOW << "Enter patient birth month (1-12): " << RESET;
+    cin >> month;
+    cout << YELLOW << "Enter patient birth day (1-31): " << RESET;
+    cin >> day;
+    
+    cin.ignore(); // Clear the input buffer
+    
+    cout << YELLOW << "Enter patient medical condition: " << RESET;
+    getline(cin, condition);
+    
+    cout << YELLOW << "Enter patient treatment plan: " << RESET;
+    getline(cin, treatment);
+    
+    // Create the patient
+    try {
+        Date dob(year, month, day);
+        
+        // Check if hospital has capacity
+        if (hospitals[hospitalName]->getNumAdmittedPatients() >= 20) {
+            cout << RED << "❌ Hospital is at capacity. Cannot admit more patients." << RESET << endl;
+            return;
+        }
+        
+        showLoadingAnimation("Processing admission ");
+        
+        // Create and admit the patient
+        hospitals[hospitalName]->admitPatient(make_unique<Patient>(
+            name, phoneNumber, dob, condition, treatment
+        ));
+        
+        cout << GREEN << "\n✓ Patient " << WHITE << BOLD << name << RESET << GREEN 
+             << " successfully admitted to " << WHITE << BOLD << hospitalName << RESET << endl;
+    } 
+    catch (const exception& e) {
+        cout << RED << "❌ Error: " << e.what() << RESET << endl;
+    }
+}
+
+// Function to show a loading animation
+void showLoadingAnimation(const string& message, int milliseconds) {
+    cout << YELLOW << message;
+    cout.flush();
+    
+    string spinner = "-\\|/";
+    int iterations = milliseconds / 100;
+    
+    for (int i = 0; i < iterations; i++) {
+        cout << CYAN << spinner[i % spinner.length()] << "\b" << RESET;
+        cout.flush();
+        
+        // Sleep for a fraction of a second
+        this_thread::sleep_for(chrono::milliseconds(100));
+    }
+    
+    cout << GREEN << "✓" << RESET << endl;
 }
 

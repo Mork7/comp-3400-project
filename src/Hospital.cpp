@@ -216,14 +216,14 @@ Nurse* Hospital::getNurseById(int nurseID) {
     return nullptr;   
 }
 
-// Get a single doctor by ID so we can use their methods
+// Get a single patient by ID so we can use their methods
 Patient* Hospital::getPatientById(int patientID) {
     for (auto& patient : patients) {
         if (patient->getPatientID() == patientID) {
             return patient.get(); 
         }
     }
-    cerr << "Warning: Patient with ID " << patientID << " not found in " << name << ".\n";
+    //cerr << "Warning: Patient with ID " << patientID << " not found in " << name << ".\n";
     return nullptr;   
 }
 

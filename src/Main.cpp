@@ -252,7 +252,7 @@ void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals)
         }
         
         // Validate hospital selection
-        if (selection < 1 || selection > hospitalNames.size()) {
+        if (selection < 1 || size_t(selection) > hospitalNames.size()) {
             cout << RED << "❌ Invalid hospital number!" << RESET << endl;
             continue;
         }
@@ -372,7 +372,7 @@ string getHospitalByNumber(const unordered_map<string, unique_ptr<Hospital>>& ho
     cin >> selection;
     
     // Validate selection
-    if (selection < 1 || selection > hospitalNames.size()) {
+    if (selection < 1 || size_t(selection) > hospitalNames.size()) {
         cout << RED << "❌ Invalid hospital number!" << RESET << endl;
         return "";
     }
@@ -481,7 +481,7 @@ void requestMedication(unordered_map<string, unique_ptr<Hospital>>& hospitals,
     cin >> selection;
     
     // Validate selection
-    if (selection < 1 || selection > pharmacyNames.size()) {
+    if (selection < 1 || size_t(selection) > pharmacyNames.size()) {
         cout << RED << "❌ Invalid pharmacy number!" << RESET << endl;
         return;
     }

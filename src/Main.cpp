@@ -255,7 +255,7 @@ void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals)
         bool stayInSubmenu = true;
         while (stayInSubmenu) {
             cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
-            cout << BOLD << CYAN << "║   " << WHITE << selectedHospital << RESET << endl;
+            cout << BOLD << CYAN << "║   " << selectedHospital << RESET << endl;
             cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
             
             cout << YELLOW << " 1. " << GREEN << "View Doctors" << RESET << endl;

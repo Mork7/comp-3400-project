@@ -593,4 +593,3 @@ void showLoadingAnimation(const string& message, int milliseconds) {
     
     cout << GREEN << "✓" << RESET << endl;
 }
-

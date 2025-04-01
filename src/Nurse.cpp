@@ -38,7 +38,7 @@ void Nurse::removePatient(int patientID) {
 void Nurse::displayInfo() const {
     cout << "Nurse ID: " << employeeID << " - " << name << "\n";
     if (assignedPatients.empty()) {
-        cout << RED <<  "No assigned patients." << endl;
+        cout << RED <<  "No assigned patients." << RESET << endl;
     } else {
         cout << "Patients under care:\n";
         for (const auto& patient : assignedPatients) {

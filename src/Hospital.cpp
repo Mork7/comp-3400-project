@@ -132,9 +132,6 @@ void Hospital::transferPatient(Hospital& newHospital, int patientID) {
 // PRINTS
 // Print Patients
 void Hospital::printPatients() {
-    cout << BLUE << "\n============================================================" << RESET << endl;
-    cout << BLUE << "   📋 Patients in " << name << RESET << endl;
-    cout << BLUE << "============================================================" << RESET << endl;
     
     if (patients.empty()) {
         cout << RED << "No patients currently admitted.\n" << RESET;
@@ -147,9 +144,6 @@ void Hospital::printPatients() {
 
 // Print Doctors
 void Hospital::printDoctors() {
-    cout << BLUE << "\n============================================================" << RESET << endl;
-    cout << BLUE << "   🩺 Doctors in " << name << RESET << endl;
-    cout << BLUE << "============================================================" << RESET << endl;
     
     if (doctors.empty()) {
         cout << RED << "No doctors available.\n" << RESET;
@@ -162,10 +156,7 @@ void Hospital::printDoctors() {
 
 // Print Nurses
 void Hospital::printNurses() {
-    cout << BLUE << "\n============================================================" << RESET << endl;
-    cout << BLUE << "   🏥 Nurses in " << name << RESET << endl;
-    cout << BLUE << "============================================================" << RESET << endl;
-
+    
     if (nurses.empty()) {
         cout << RED << "No nurses available.\n" << RESET;
     } else {

@@ -41,14 +41,14 @@ void Patient::displayInfo() const {
     cout << "===============================\n"
             << "      Patient Information\n"
             << "===============================\n"
-            << "ID           : " << patientID << "\n"
-            << "Name         : " << name << "\n"
-            << "DOB          : " << DOB.toString() << "\n"
-            << "Condition    : " << condition << "\n"
-            << "Treatment    : " << treatment << "\n"
-            << "Primary      : " << "Dr. " << getPrimaryDoctor()->getName() << "\n"
-            << "Admitted on  : " << admissionDate.toString() << "\n"
-            << "Discharged on: ";
+            << "ID            : " << patientID << "\n"
+            << "Name          : " << name << "\n"
+            << "DOB           : " << DOB.toString() << "\n"
+            << "Condition     : " << condition << "\n"
+            << "Treatment     : " << treatment << "\n"
+            << "Primary Doctor: " << "Dr. " << getPrimaryDoctor()->getName() << "\n"
+            << "Admitted on   : " << admissionDate.toString() << "\n"
+            << "Discharged on : ";
 
     if (dischargeDate.compareTo(Date()) == 0) {
         cout << YELLOW << "Pending" << RESET;

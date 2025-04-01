@@ -4,11 +4,11 @@
 unordered_map<string, unique_ptr<Hospital>> setupHospitals() {
     unordered_map<string, unique_ptr<Hospital>> hospitals;
     
-    hospitals["Mork's"] = make_unique<Hospital>("Mork's Sick Person Emporium and Grill");
-    hospitals["Ryan's"] = make_unique<Hospital>("Ryan's Discotech Clinic");
-    hospitals["HotelDieu"] = make_unique<Hospital>("Hotel Dieu");
-    hospitals["Met"] = make_unique<Hospital>("Met");
-    hospitals["Markos'"] = make_unique<Hospital>("Markos' Underground Chop Shop");
+    hospitals["Mork's Sick Person Emporium and Grill"] = make_unique<Hospital>("Mork's Sick Person Emporium and Grill");
+    hospitals["Ryan's Discotech Clinic"] = make_unique<Hospital>("Ryan's Discotech Clinic");
+    hospitals["Hotel-Dieu Grace Healthcare"] = make_unique<Hospital>("Hotel-Dieu Grace Healthcare");
+    hospitals["Windsor Regional Hospital Met Campus"] = make_unique<Hospital>("Windsor Regional Hospital Met Campus");
+    hospitals["Markos' Underground Chop Shop"] = make_unique<Hospital>("Markos' Underground Chop Shop");
 
     vector<string> doctorNames = {
         "Mark Finerty", "Tamara Englbrecht", "Gwegg Duguay", "Dan Popescu", "Ryan Bluteau",

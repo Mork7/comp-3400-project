@@ -75,16 +75,16 @@ int main() {
     // Display welcome banner
     cout << BOLD << CYAN;
     cout << R"(
- ╔═══════════════════════════════════════════════════╗
- ║                                                   ║
- ║   ╦ ╦┌─┐┌─┐┌─┐┬┌┬┐┌─┐┬                           ║
- ║   ╠═╣│ │└─┐├─┘│ │ ├─┤│                           ║
- ║   ╩ ╩└─┘└─┘┴  ┴ ┴ ┴ ┴┴─┘                         ║
- ║   ╔╦╗┌─┐┌┐┌┌─┐┌─┐┌─┐┌┬┐┌─┐┌┐┌┌┬┐  ╔═╗┬ ┬┌─┐┌┬┐┌─┐┌┬┐║
- ║   ║║║├─┤│││├─┤│ ┬├┤ │││├┤ │││ │   ╚═╗└┬┘└─┐ │ ├┤ │││║
- ║   ╩ ╩┴ ┴┘└┘┴ ┴└─┘└─┘┴ ┴└─┘┘└┘ ┴   ╚═╝ ┴ └─┘ ┴ └─┘┴ ┴║
- ║                                                   ║
- ╚═══════════════════════════════════════════════════╝
+ ╔══════════════════════════════════════════════════════╗
+ ║                                                      ║
+ ║   ╦ ╦┌─┐┌─┐┌─┐┬┌┬┐┌─┐┬                               ║
+ ║   ╠═╣│ │└─┐├─┘│ │ ├─┤│                               ║
+ ║   ╩ ╩└─┘└─┘┴  ┴ ┴ ┴ ┴┴─┘                             ║
+ ║   ╔╦╗┌─┐┌┐┌┌─┐┌─┐┌─┐┌┬┐┌─┐┌┐┌┌┬┐  ╔═╗┬ ┬┌─┐┌┬┐┌─┐┌┬┐ ║
+ ║   ║║║├─┤│││├─┤│ ┬├┤ │││├┤ │││ │   ╚═╗└┬┘└─┐ │ ├┤ │││ ║
+ ║   ╩ ╩┴ ┴┘└┘┴ ┴└─┘└─┘┴ ┴└─┘┘└┘ ┴   ╚═╝ ┴ └─┘ ┴ └─┘┴ ┴ ║
+ ║                                                      ║
+ ╚══════════════════════════════════════════════════════╝
 )" << RESET << endl;
 
     cout << YELLOW << " Loading system components";
@@ -95,7 +95,7 @@ int main() {
     }
     cout << GREEN << " Done!" << RESET << endl;
     
-    bool runTests = false; // Set to true when you want to run tests
+    bool runTests = true; // Set to true when you want to run tests
     
     // Initialize hospitals 
     auto hospitals = setupHospitals();
@@ -114,7 +114,11 @@ int main() {
         assert(morks->getFunds() == initialFundsMorks && "Test failed: Mork's initial funds incorrect!");
         assert(ryans->getFunds() == initialFundsRyans && "Test failed: Ryan's initial funds incorrect!");
         // Transfer patient check
+        auto primary = morks->getPatientById(1060)->getPrimaryDoctor();
+        cout << primary->getName() << endl;
         morks->transferPatient(*ryans, 1060);
+        cout << ryans->getPatientById(1060)->getPrimaryDoctor()->getName() << endl;
+        assert(primary != ryans->getPatientById(1060)->getPrimaryDoctor());
         assert(ryans->getPatientById(1060) != nullptr && "Test failed: Ryan's never received patient!");
         assert(morks->getPatientById(1060) == nullptr && "Test failed: Mork's still owns patient!");
         
@@ -343,7 +347,7 @@ void dischargePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
 void requestMedication(unordered_map<string, unique_ptr<Hospital>>& hospitals, 
                       unordered_map<string, unique_ptr<Pharmacy>>& pharmacies) {
     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
-    cout << BOLD << CYAN << "║          💊 REQUEST MEDICATION          ║" << RESET << endl;
+    cout << BOLD << CYAN << "║          💊 REQUEST MEDICATION         ║" << RESET << endl;
     cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
     
     // Display all hospitals

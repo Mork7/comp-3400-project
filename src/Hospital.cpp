@@ -113,20 +113,8 @@ void Hospital::transferPatient(Hospital& newHospital, int patientID) {
         [&](unique_ptr<Patient>& patient) {
             if (patient->getPatientID() == patientID) {
 
-                // Store pointer before moving
-                Patient* patientPtr = patient.get();  
-
                 // Move ownership to the new hospital
                 newHospital.admitPatient(move(patient));
-
-                // Assign a new primary doctor from the new hospital
-                if (!newHospital.doctors.empty()) {
-                    patientPtr->setPrimaryDoctor(newHospital.doctors.front().get());  // assign first available doctor
-                } else {
-                    cout << "Warning: No doctors available at " << newHospital.getName() 
-                         << ". Primary doctor not set.\n";
-                    patientPtr->setPrimaryDoctor(nullptr); // Avoids accessing an empty vector
-                }
                 
                 return true; 
             }

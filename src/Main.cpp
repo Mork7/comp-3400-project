@@ -9,7 +9,7 @@
 #include <chrono>
 #include <limits>
 
-// ANSI color codes for prettier output
+// ANSI color codes
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"
 #define RED     "\033[31m"
@@ -70,10 +70,10 @@ string getHospitalByNumber(const unordered_map<string, unique_ptr<Hospital>>& ho
 int main() {
     cout << fixed << setprecision(2);
     
-    // Clear screen (works on most terminals)
+    // Clear screen
     system("clear");
     
-    // Display welcome banner
+    // Display welcome screen
     cout << BOLD << CYAN;
     cout << R"(
  ╔══════════════════════════════════════════════════════╗
@@ -96,7 +96,7 @@ int main() {
     }
     cout << GREEN << " Done!" << RESET << endl;
     
-    bool runTests = false; // Set to true when you want to run tests
+    bool runTests = false; // Set to true if you want to run tests
     
     // Initialize hospitals 
     auto hospitals = setupHospitals();
@@ -160,10 +160,9 @@ int main() {
             continue;  // Restart the loop
         }
         
-        // Discard any remaining characters in the input buffer
+        // Discard remaining input in buffer
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        // handle menu options
         if (choice == 1) {
             viewHospitals(hospitals);  
         }
@@ -186,7 +185,7 @@ int main() {
             break;  
         }
         else {
-            cout << RED << "❌ Invalid choice! Please enter a number from 1-7." << RESET << endl;
+            cout << RED << "❌ Invalid choice! Please enter a number from 1 to 7." << RESET << endl;
         }
     }
 
@@ -194,7 +193,7 @@ int main() {
     return 0;
 }
 
-//Function to display the main menu
+//Display the main menu
 void displayMainMenu() {
     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
     cout << BOLD << CYAN << "║       🏥 Hospital Management System    ║" << RESET << endl;
@@ -210,7 +209,7 @@ void displayMainMenu() {
     cout << CYAN << "\n Enter your choice: " << RESET;
 }
 
-//Function to view hospitals with submenu
+//View hospitals with submenu
 void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     while (true) {
         cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
@@ -251,7 +250,7 @@ void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals)
         
         string selectedHospital = hospitalNames[selection - 1];
         
-        // Show submenu for the selected hospital
+        // Submenu for the selected hospital
         bool stayInSubmenu = true;
         while (stayInSubmenu) {
             cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
@@ -277,7 +276,6 @@ void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals)
             
             switch (subChoice) {
                 case 1:
-                    // View Doctors
                     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
                     cout << BOLD << CYAN << "║          🩺 HOSPITAL DOCTORS           ║" << RESET << endl;
                     cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
@@ -285,7 +283,6 @@ void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals)
                     break;
                     
                 case 2:
-                    // View Nurses
                     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
                     cout << BOLD << CYAN << "║          👩‍⚕️ HOSPITAL NURSES            ║" << RESET << endl;
                     cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
@@ -293,7 +290,6 @@ void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals)
                     break;
                     
                 case 3:
-                    // View Patients
                     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
                     cout << BOLD << CYAN << "║         🛌 HOSPITAL PATIENTS           ║" << RESET << endl;
                     cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
@@ -306,18 +302,18 @@ void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals)
                     break;
                     
                 default:
-                    cout << RED << "❌ Invalid option! Please enter a number from 1-4." << RESET << endl;
+                    cout << RED << "❌ Invalid option! Please enter a number from 1 to 4." << RESET << endl;
             }
             
             if (stayInSubmenu && subChoice >= 1 && subChoice <= 3) {
                 cout << YELLOW << "\nPress Enter to continue..." << RESET;
-                cin.get(); // Wait for user to press Enter
+                cin.get();
             }
         }
     }
 }
 
-//Function to view patients
+//View/search for patients
 void viewPatients(const unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
     cout << BOLD << CYAN << "║            👤 PATIENT LOOKUP           ║" << RESET << endl;
@@ -349,7 +345,7 @@ void viewPatients(const unordered_map<string, unique_ptr<Hospital>>& hospitals) 
     }
 }
 
-// Helper function to get a hospital by number selection
+// Get a hospital by number selection
 string getHospitalByNumber(const unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     // Display all hospitals with numbers
     cout << YELLOW << "Available Hospitals:" << RESET << endl;
@@ -376,20 +372,19 @@ string getHospitalByNumber(const unordered_map<string, unique_ptr<Hospital>>& ho
     return hospitalNames[selection - 1];
 }
 
-// Function to relocate a patient between hospitals
+// Relocate a patient between hospitals
 void relocatePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
     cout << BOLD << CYAN << "║          🚑 RELOCATE PATIENT           ║" << RESET << endl;
     cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
     
     // Get source hospital by number
-    cout << YELLOW << "Enter the patient's current hospital:" << RESET << endl;
+    cout << YELLOW << "Select the patient's current hospital:" << RESET << endl;
     string sourceHospital = getHospitalByNumber(hospitals);
     if (sourceHospital.empty()) return;
     
-    // Ask for patient ID
     int patientID;
-    cout << YELLOW << "Enter Patient ID to relocate: " << RESET;
+    cout << YELLOW << "Enter the Patient ID to relocate: " << RESET;
     cin >> patientID;
     
     Patient* patient = hospitals[sourceHospital]->getPatientById(patientID);
@@ -400,7 +395,7 @@ void relocatePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     
     // Get destination hospital
     cin.ignore();
-    cout << YELLOW << "Enter the destination hospital:" << RESET << endl;
+    cout << YELLOW << "Select the destination hospital:" << RESET << endl;
     string destHospital = getHospitalByNumber(hospitals);
     if (destHospital.empty()) return;
     
@@ -416,7 +411,7 @@ void relocatePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
          << RESET << GREEN << " to " << WHITE << BOLD << destHospital << RESET << endl;
 }
 
-// Function to discharge a patient
+// Discharge a patient
 void dischargePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
     cout << BOLD << CYAN << "║           🏥 DISCHARGE PATIENT          ║" << RESET << endl;
@@ -450,7 +445,7 @@ void dischargePatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     }
 }
 
-// Function to request medication from a pharmacy
+// Request medication from a pharmacy
 void requestMedication(unordered_map<string, unique_ptr<Hospital>>& hospitals, 
                       unordered_map<string, unique_ptr<Pharmacy>>& pharmacies) {
     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
@@ -508,7 +503,7 @@ void requestMedication(unordered_map<string, unique_ptr<Hospital>>& hospitals,
     }
 }
 
-// Function to add a new patient
+// Add a new patient
 void addPatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
     cout << BOLD << CYAN << "║           👤 ADD NEW PATIENT           ║" << RESET << endl;
@@ -525,25 +520,25 @@ void addPatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     string name, phoneNumber, condition, treatment;
     int year, month, day;
     
-    cout << YELLOW << "Enter patient name: " << RESET;
+    cout << YELLOW << "Enter patient's name: " << RESET;
     getline(cin, name);
     
-    cout << YELLOW << "Enter patient phone number: " << RESET;
+    cout << YELLOW << "Enter patient's phone number: " << RESET;
     getline(cin, phoneNumber);
     
-    cout << YELLOW << "Enter patient birth year (YYYY): " << RESET;
+    cout << YELLOW << "Enter patient's birth year (YYYY): " << RESET;
     cin >> year;
-    cout << YELLOW << "Enter patient birth month (1-12): " << RESET;
+    cout << YELLOW << "Enter patient's birth month (1-12): " << RESET;
     cin >> month;
-    cout << YELLOW << "Enter patient birth day (1-31): " << RESET;
+    cout << YELLOW << "Enter patient's birth day (1-31): " << RESET;
     cin >> day;
     
     cin.ignore(); // Clear the input buffer
     
-    cout << YELLOW << "Enter patient medical condition: " << RESET;
+    cout << YELLOW << "Enter patient's medical condition: " << RESET;
     getline(cin, condition);
     
-    cout << YELLOW << "Enter patient treatment plan: " << RESET;
+    cout << YELLOW << "Enter patient's treatment plan: " << RESET;
     getline(cin, treatment);
     
     // Create the patient
@@ -571,7 +566,7 @@ void addPatient(unordered_map<string, unique_ptr<Hospital>>& hospitals) {
     }
 }
 
-// Function to show a loading animation
+// Loading animation
 void showLoadingAnimation(const string& message, int milliseconds) {
     cout << YELLOW << message;
     cout.flush();
@@ -580,7 +575,7 @@ void showLoadingAnimation(const string& message, int milliseconds) {
     int iterations = milliseconds / 100;
     
     for (int i = 0; i < iterations; i++) {
-        cout << CYAN << spinner[i % spinner.length()] << "\b" << RESET;
+        cout << BOLD << RED << spinner[i % spinner.length()] << "\b" << RESET;
         cout.flush();
         
         // Sleep for a fraction of a second

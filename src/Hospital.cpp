@@ -23,12 +23,12 @@ Hospital::Hospital(string name) : name(name), numAdmittedPatients(0), funds(5045
 
 // Add doctor to hospital staff
 void Hospital::addDoctor(unique_ptr<Doctor> doctor) {
-    doctors.push_back(move(doctor));
+    doctors.push_back(std::move(doctor));
 }
 
 // Add nurse to hospital staff
 void Hospital::addNurse(unique_ptr<Nurse> nurse) {
-    nurses.push_back(move(nurse));
+    nurses.push_back(std::move(nurse));
 }
 
 // Add a patient to the hospital, we will assign a doctor at random to be the primary
@@ -63,7 +63,7 @@ void Hospital::admitPatient(unique_ptr<Patient> patient) {
         }
         
         // successfully add the patient to the hostpial
-        patients.push_back(move(patient));
+        patients.push_back(std::move(patient));
         numAdmittedPatients++;
     } else {
         cout << "Hospital at capacity, cannot add more Patients" << endl;
@@ -114,7 +114,7 @@ void Hospital::transferPatient(Hospital& newHospital, int patientID) {
             if (patient->getPatientID() == patientID) {
 
                 // Move ownership to the new hospital
-                newHospital.admitPatient(move(patient));
+                newHospital.admitPatient(std::move(patient));
                 
                 return true; 
             }

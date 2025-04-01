@@ -19,7 +19,7 @@ Patient::Patient(string name, string phone, Date dob, string condition, string t
 Patient::Patient(const Patient& p) : patientID(p.patientID), name(p.name), phoneNumber(p.phoneNumber), DOB(p.DOB), condition(p.condition), treatment(p.treatment), admissionDate(p.admissionDate), dischargeDate(p.dischargeDate) {}
 
 // Move constructor, I believe we will need this to move patient to another hospital, depending on how they are related and stored in Hospital. If there is a vector or something in Hospital that stores the patients, we can just move the Patient to that vector without having to make another Patient instance.
-Patient::Patient(Patient&& p) : patientID(move(p.patientID)), name(move(p.name)), phoneNumber(move(p.phoneNumber)), DOB(move(p.DOB)), condition(move(p.condition)), treatment(move(p.treatment)), admissionDate(move(p.admissionDate)), dischargeDate(move(p.dischargeDate)) {} 
+Patient::Patient(Patient&& p) : patientID(std::move(p.patientID)), name(std::move(p.name)), phoneNumber(std::move(p.phoneNumber)), DOB(std::move(p.DOB)), condition(std::move(p.condition)), treatment(std::move(p.treatment)), admissionDate(std::move(p.admissionDate)), dischargeDate(std::move(p.dischargeDate)) {} 
 
 // Discharge Patient, set their discharge date to today and get total owed
 void Patient::discharge() {

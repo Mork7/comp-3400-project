@@ -8,8 +8,8 @@ int Employee::nextID = 1;
 
 // Constructor
 Employee::Employee(string name, Date dob, string phone, string position, Hospital* hospital)
-    : employeeID(nextID++), name(move(name)), phoneNumber(move(phone)),
-        DOB(move(dob)), position(move(position)), hospital(move(hospital)) {}
+    : employeeID(nextID++), name(std::move(name)), phoneNumber(std::move(phone)),
+        DOB(std::move(dob)), position(std::move(position)), hospital(std::move(hospital)) {}
 
 // Getters
 int Employee::getEmployeeID() const {

@@ -42,7 +42,7 @@ void Nurse::displayInfo() const {
     } else {
         cout << "Patients under care:\n";
         for (const auto& patient : assignedPatients) {
-            cout << YELLOW "  - Patient ID: " << patient->getPatientID() << RESET << endl;;
+            cout << YELLOW << "  - Patient ID: " << patient->getPatientID() << " (" << patient->getName() << ")" << RESET << endl;
         }
     }
 }

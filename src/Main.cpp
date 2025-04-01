@@ -66,6 +66,7 @@ void requestMedication(unordered_map<string, unique_ptr<Hospital>>& hospitals,
 void addPatient(unordered_map<string, unique_ptr<Hospital>>& hospitals);
 void showLoadingAnimation(const string& message, int milliseconds = 1500);
 string getHospitalByNumber(const unordered_map<string, unique_ptr<Hospital>>& hospitals);
+string createHeader(const string& title);
 
 int main() {
     cout << fixed << setprecision(2);
@@ -76,16 +77,16 @@ int main() {
     // Display welcome screen
     cout << BOLD << CYAN;
     cout << R"(
- ╔══════════════════════════════════════════════════════╗
- ║                                                      ║
- ║   ╦ ╦┌─┐┌─┐┌─┐┬┌┬┐┌─┐┬                               ║
- ║   ╠═╣│ │└─┐├─┘│ │ ├─┤│                               ║
- ║   ╩ ╩└─┘└─┘┴  ┴ ┴ ┴ ┴┴─┘                             ║
- ║   ╔╦╗┌─┐┌┐┌┌─┐┌─┐┌─┐┌┬┐┌─┐┌┐┌┌┬┐  ╔═╗┬ ┬┌─┐┌┬┐┌─┐┌┬┐ ║
- ║   ║║║├─┤│││├─┤│ ┬├┤ │││├┤ │││ │   ╚═╗└┬┘└─┐ │ ├┤ │││ ║
- ║   ╩ ╩┴ ┴┘└┘┴ ┴└─┘└─┘┴ ┴└─┘┘└┘ ┴   ╚═╝ ┴ └─┘ ┴ └─┘┴ ┴ ║
- ║                                                      ║
- ╚══════════════════════════════════════════════════════╝
+  ┌────────────────────────────────────────────────┐
+  │     _    _                  _ _        _       │
+  │    | |  | |                (_) |      | |      │
+  │    | |__| | ___  ___ _ __   _| |_ __ _| |      │
+  │    |  __  |/ _ \/ __| '_ \ | | __/ _` | |      │
+  │    | |  | | (_) \__ \ |_) || | || (_| | |      │
+  │    |_|  |_|\___/|___/ .__/_/ |\__\__,_|_|      │
+  │         MANAGEMENT  | |                        │
+  │            SYSTEM   |_|                        │
+  └────────────────────────────────────────────────┘
 )" << RESET << endl;
 
     cout << YELLOW << " Loading system components";
@@ -189,14 +190,22 @@ int main() {
         }
     }
 
-    cout << RED << "\nThank you for using the Hospital Management System." << RESET << endl;
+    cout << RED << "\nThank you for using the Hospital Management System!" << RESET << endl;
     return 0;
+}
+
+//Create hospital headers with frame dynamically
+string createHeader(const string& title) {
+    string result = "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n";
+    result += "┃  🏥 " + title + string(38 - title.length(), ' ') + "┃\n";
+    result += "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛";
+    return result;
 }
 
 //Display the main menu
 void displayMainMenu() {
     cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
-    cout << BOLD << CYAN << "║       🏥 Hospital Management System    ║" << RESET << endl;
+    cout << BOLD << CYAN << "║       🏥 HOSPITAL MANAGEMENT SYSTEM    ║" << RESET << endl;
     cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
     
     cout << YELLOW << " 1. " << GREEN << "View Hospitals" << RESET << endl;
@@ -253,9 +262,9 @@ void viewHospitals(const unordered_map<string, unique_ptr<Hospital>>& hospitals)
         // Submenu for the selected hospital
         bool stayInSubmenu = true;
         while (stayInSubmenu) {
-            cout << BOLD << CYAN << "\n╔════════════════════════════════════════╗" << RESET << endl;
-            cout << BOLD << CYAN << "║   " << selectedHospital << RESET << endl;
-            cout << BOLD << CYAN << "╚════════════════════════════════════════╝" << RESET << endl;
+            
+            // Using new createHeader function to generate dynamic hospital frame
+            cout << BOLD << CYAN << createHeader(selectedHospital) << RESET << endl;
             
             cout << YELLOW << " 1. " << GREEN << "View Doctors" << RESET << endl;
             cout << YELLOW << " 2. " << GREEN << "View Nurses" << RESET << endl;

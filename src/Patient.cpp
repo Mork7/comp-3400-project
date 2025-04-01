@@ -38,9 +38,9 @@ int Patient::getDaysAdmitted() const {
 
 // Display the patient information in a nice readable format.
 void Patient::displayInfo() const {
-    cout << "===============================\n"
+    cout << YELLOW << "===============================\n"
             << "      Patient Information\n"
-            << "===============================\n"
+            << "===============================\n" << RESET
             << "ID            : " << patientID << "\n"
             << "Name          : " << name << "\n"
             << "DOB           : " << DOB.toString() << "\n"
@@ -56,9 +56,9 @@ void Patient::displayInfo() const {
         cout << GREEN << dischargeDate.toString() << RESET;
     }
 
-    cout << "\n-------------------------------\n"
-            << "Total Days Admitted: " << getDaysAdmitted() << " day(s)\n"
-            << "===============================\n";
+    cout << YELLOW << "\n-------------------------------\n"
+            << GREEN << "Total Days Admitted: " << getDaysAdmitted() << " day(s)\n" << RESET
+            << YELLOW << "===============================\n" << RESET;
 }
 
 // Get Discharge Date

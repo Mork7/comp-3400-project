@@ -86,7 +86,7 @@ void Doctor::listPatients() const {
         std::cout << "No patients assigned.\n";
     } else {
         for (const auto& patient : patients) {
-            std::cout << "  - Patient ID: " << patient->getPatientID() << " (" << patient->getName() << ")\n";
+            std::cout << YELLOW << "  - Patient ID: " << patient->getPatientID() << " (" << patient->getName() << ")" << RESET << endl;
         }
     }
 }

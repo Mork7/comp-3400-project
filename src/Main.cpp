@@ -487,6 +487,8 @@ void requestMedication(unordered_map<string, unique_ptr<Hospital>>& hospitals,
     }
     
     string pharmacyName = pharmacyNames[selection - 1];
+
+    pharmacies[pharmacyName]->listMedications();
     
     // Ask for medication name
     string medicationName;

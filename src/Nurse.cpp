@@ -47,6 +47,7 @@ void Nurse::displayInfo() const {
     }
 }
 
+// Nurses can only take 2 patients
 bool Nurse::canTakePatient() const {
     return assignedPatients.size() < 2;
 }

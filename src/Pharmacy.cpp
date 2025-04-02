@@ -14,7 +14,7 @@ void Pharmacy::addMedication(string medName, double price) {
 
 // List all meds the pharmacy has
 void Pharmacy::listMedications() const {
-    cout << "\nPharmacy: " << name << " - Available Medications:\n";
+    cout << "\033[32m" << name << "\033[0m - Available Medications:\n";
     for (const auto& med : medicationPrices) {
         cout << med.first << " - $" << med.second << " per unit\n";
     }
